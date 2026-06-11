@@ -1,0 +1,46 @@
+def activityNotifications(expenditure, d):
+    count = [0] * 201
+    notifications = 0
+
+    for i in range(d):
+        count[expenditure[i]] += 1
+
+    def get_twice_median():
+        curr = 0
+
+        if d % 2 == 1:
+            target = d // 2 + 1
+            for i in range(201):
+                curr += count[i]
+                if curr >= target:
+                    return 2 * i
+        else:
+            first = d // 2
+            second = first + 1
+            m1 = m2 = None
+
+            for i in range(201):
+                curr += count[i]
+
+                if m1 is None and curr >= first:
+                    m1 = i
+                if curr >= second:
+                    m2 = i
+                    break
+
+            return m1 + m2
+
+    for i in range(d, len(expenditure)):
+        if expenditure[i] >= get_twice_median():
+            notifications += 1
+
+        count[expenditure[i - d]] -= 1
+        count[expenditure[i]] += 1
+
+    return notifications
+
+
+n, d = map(int, input().split())
+expenditure = list(map(int, input().split()))
+
+print(activityNotifications(expenditure, d))
